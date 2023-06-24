@@ -22,53 +22,23 @@ namespace EmpresasFornecedoresCRUD.Controllers
             _configuration = configuration;
         }
 
-
-
-        [HttpPost]
-        public IActionResult Post(Empresa emp)
+        [HttpGet]
+        public IActionResult Get()
         {
             string query = @"
-        insert into Empresa(CNPJ, Nome_Fantasia, Cep, Estado) values
-        (@Cnpj, @Nome_Fantasia, @Cep, @Estado)
+    select Id, CNPJ, Nome_Fantasia, Cep, Estado from empresa
     ";
-
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
 
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             using (SqlCommand myCommand = new SqlCommand(query, myCon))
             {
-                myCommand.Parameters.AddWithValue("@Cnpj", emp.Cnpj);
-                myCommand.Parameters.AddWithValue("@Nome_Fantasia", emp.Nome_Fantasia);
-                myCommand.Parameters.AddWithValue("@Cep", emp.Cep);
-                myCommand.Parameters.AddWithValue("@Estado", emp.Estado);
                 myCon.Open();
-                myCommand.ExecuteNonQuery();
-            }
-
-            return Ok();
-        }
-
-        [HttpGet]
-        public JsonResult Get()
-        {
-            string query = @"
-            select Id, CNPJ, Nome_Fantasia, Cep, Estado from empresa
-            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("Default");
-
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
-                }
+                SqlDataReader myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myCon.Close();
             }
 
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
@@ -86,6 +56,32 @@ namespace EmpresasFornecedoresCRUD.Controllers
             return new JsonResult(rows);
         }
 
+
+        [HttpPost]
+        public IActionResult Post(Empresa emp)
+        {
+            string query = @"
+        insert into Empresa values
+        (@Cnpj, @Nome_Fantasia, @Cep, @Estado)
+    ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+            {
+                myCommand.Parameters.AddWithValue("@Cnpj", emp.Cnpj);
+                myCommand.Parameters.AddWithValue("@Nome_Fantasia", emp.Nome_Fantasia);
+                myCommand.Parameters.AddWithValue("@Cep", emp.Cep);
+                myCommand.Parameters.AddWithValue("@Estado", emp.Estado);
+                myCon.Open();
+                myCommand.ExecuteNonQuery();
+            }
+
+            return Ok("Insert executado com êxito!");
+        }
+
         [HttpPut]
         public IActionResult Put(Empresa emp)
         {
@@ -98,17 +94,37 @@ namespace EmpresasFornecedoresCRUD.Controllers
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             using (SqlCommand myCommand = new SqlCommand(query, myCon))
             {
+                myCommand.Parameters.AddWithValue("@Id", emp.Id);
                 myCommand.Parameters.AddWithValue("@Cnpj", emp.Cnpj);
                 myCommand.Parameters.AddWithValue("@Nome_Fantasia", emp.Nome_Fantasia);
                 myCommand.Parameters.AddWithValue("@Cep", emp.Cep);
                 myCommand.Parameters.AddWithValue("@Estado", emp.Estado);
-                myCommand.Parameters.AddWithValue("@Id", emp.Id);
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
             }
 
-            return Ok();
+            return Ok("Update executado com êxito!");
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            string query = @"
+    delete from Empresa where Id = @Id
+    ";
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+            {
+                myCommand.Parameters.AddWithValue("@Id", id);
+                myCon.Open();
+                myCommand.ExecuteNonQuery();
+            }
+
+            return Ok("Delete executado com êxito!");
+        }
+
 
     }
 }
