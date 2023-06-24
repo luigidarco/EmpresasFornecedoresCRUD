@@ -37,6 +37,7 @@ export class Empresa extends Component {
                             <th>Nome Fantasia</th>
                             <th>Cep</th>
                             <th>Estado</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
