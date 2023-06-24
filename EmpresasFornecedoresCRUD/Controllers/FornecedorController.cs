@@ -1,23 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using EmpresasFornecedoresCRUD.Models;
+using System.Runtime.ConstrainedExecution;
 
 namespace EmpresasFornecedoresCRUD.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpresaController : ControllerBase
+    public class FornecedorController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public EmpresaController(IConfiguration configuration)
+        public FornecedorController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -26,7 +23,8 @@ namespace EmpresasFornecedoresCRUD.Controllers
         public IActionResult Get()
         {
             string query = @"
-    select Id, CNPJ, Nome_Fantasia, Cep, Estado from empresa
+            select Id, Cnpj_Cpf, Nome, Email, Cep, convert(varchar(10),Data_nascimento,120) as Data_nascimento 
+            from Fornecedor
     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -58,12 +56,13 @@ namespace EmpresasFornecedoresCRUD.Controllers
 
 
         [HttpPost]
-        public IActionResult Post(Empresa emp)
+        public IActionResult Post(Fornecedor forn)
         {
             string query = @"
-        insert into Empresa (Cnpj, Nome_Fantasia, Cep, Estado) values
-        (@Cnpj, @Nome_Fantasia, @Cep, @Estado)
+        insert into Fornecedor (Cnpj_Cpf, Nome, Email, Cep, Data_nascimento) values
+        (@Cnpj_Cpf, @Nome, @Email, @Cep, @Data_nascimento)
     ";
+            
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -71,10 +70,12 @@ namespace EmpresasFornecedoresCRUD.Controllers
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             using (SqlCommand myCommand = new SqlCommand(query, myCon))
             {
-                myCommand.Parameters.AddWithValue("@Cnpj", emp.Cnpj);
-                myCommand.Parameters.AddWithValue("@Nome_Fantasia", emp.Nome_Fantasia);
-                myCommand.Parameters.AddWithValue("@Cep", emp.Cep);
-                myCommand.Parameters.AddWithValue("@Estado", emp.Estado);
+                myCommand.Parameters.AddWithValue("@Cnpj_Cpf", forn.Cnpj_Cpf);
+                myCommand.Parameters.AddWithValue("@Nome", forn.Nome);
+                myCommand.Parameters.AddWithValue("@Email", forn.Email);
+                myCommand.Parameters.AddWithValue("@Cep", forn.Cep);
+                myCommand.Parameters.AddWithValue("@Data_nascimento", forn.Data_nascimento);
+
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
             }
@@ -83,22 +84,24 @@ namespace EmpresasFornecedoresCRUD.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(Empresa emp)
+        public IActionResult Put(Fornecedor forn)
         {
             string query = @"
-    update Empresa set CNPJ = @Cnpj, Nome_Fantasia = @Nome_Fantasia, Cep = @Cep, Estado = @Estado where Id = @Id
+            update Fornecedor set Cnpj_Cpf = @Cnpj_Cpf, Nome = @Nome, Email = @Email, Data_nascimento= @Data_Nascimento where Id = @Id
     ";
+            
             DataTable dataTable = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             using (SqlCommand myCommand = new SqlCommand(query, myCon))
             {
-                myCommand.Parameters.AddWithValue("@Id", emp.Id);
-                myCommand.Parameters.AddWithValue("@Cnpj", emp.Cnpj);
-                myCommand.Parameters.AddWithValue("@Nome_Fantasia", emp.Nome_Fantasia);
-                myCommand.Parameters.AddWithValue("@Cep", emp.Cep);
-                myCommand.Parameters.AddWithValue("@Estado", emp.Estado);
+                myCommand.Parameters.AddWithValue("@Id", forn.Id);
+                myCommand.Parameters.AddWithValue("@Cnpj_Cpf", forn.Cnpj_Cpf);
+                myCommand.Parameters.AddWithValue("@Nome", forn.Nome);
+                myCommand.Parameters.AddWithValue("@Email", forn.Email);
+                myCommand.Parameters.AddWithValue("@Cep", forn.Cep);
+                myCommand.Parameters.AddWithValue("@Data_nascimento", forn.Data_nascimento);
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
             }
@@ -110,7 +113,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
         public IActionResult Delete(int id)
         {
             string query = @"
-    delete from Empresa where Id = @Id
+    delete from Fornecedor where Id = @Id
     ";
             string sqlDataSource = _configuration.GetConnectionString("Default");
 
@@ -128,4 +131,3 @@ namespace EmpresasFornecedoresCRUD.Controllers
 
     }
 }
-
