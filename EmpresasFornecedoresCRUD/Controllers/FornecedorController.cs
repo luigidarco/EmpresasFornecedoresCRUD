@@ -23,7 +23,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
         public IActionResult Get()
         {
             string query = @"
-            select Id, Cnpj_Cpf, Nome, Email, Cep, convert(varchar(10),Data_nascimento,120) as Data_nascimento 
+            select Id, Cnpj_Cpf, Nome, Email, Cep, convert(varchar(10),Data_nascimento,120) as Data_nascimento, RG 
             from Fornecedor
     ";
             DataTable table = new DataTable();
@@ -59,11 +59,10 @@ namespace EmpresasFornecedoresCRUD.Controllers
         public IActionResult Post(Fornecedor forn)
         {
             string query = @"
-        insert into Fornecedor (Cnpj_Cpf, Nome, Email, Cep, Data_nascimento) values
-        (@Cnpj_Cpf, @Nome, @Email, @Cep, @Data_nascimento)
+        insert into Fornecedor (Cnpj_Cpf, Nome, Email, Cep, Data_nascimento, RG) values
+        (@Cnpj_Cpf, @Nome, @Email, @Cep, @Data_nascimento, @RG)
     ";
             
-
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
 
@@ -75,6 +74,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
                 myCommand.Parameters.AddWithValue("@Email", forn.Email);
                 myCommand.Parameters.AddWithValue("@Cep", forn.Cep);
                 myCommand.Parameters.AddWithValue("@Data_nascimento", forn.Data_nascimento);
+                myCommand.Parameters.AddWithValue("@RG", forn.RG);
 
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
@@ -87,7 +87,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
         public IActionResult Put(Fornecedor forn)
         {
             string query = @"
-            update Fornecedor set Cnpj_Cpf = @Cnpj_Cpf, Nome = @Nome, Email = @Email, Data_nascimento= @Data_Nascimento where Id = @Id
+            update Fornecedor set Cnpj_Cpf = @Cnpj_Cpf, Nome = @Nome, Email = @Email, Data_nascimento= @Data_Nascimento, RG = @RG where Id = @Id
     ";
             
             DataTable dataTable = new DataTable();
@@ -102,6 +102,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
                 myCommand.Parameters.AddWithValue("@Email", forn.Email);
                 myCommand.Parameters.AddWithValue("@Cep", forn.Cep);
                 myCommand.Parameters.AddWithValue("@Data_nascimento", forn.Data_nascimento);
+                myCommand.Parameters.AddWithValue("@RG", forn.RG);
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
             }
