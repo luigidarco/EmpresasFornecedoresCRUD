@@ -12,9 +12,9 @@ namespace EmpresasFornecedoresCRUD.Models
         public string Cep { get; set; }
         public string Data_nascimento { get; set; }
         public string RG { get; set; }
-        
+
         [JsonIgnore]
-        public ICollection<int> ListaDeFornecedores { get; set; }
+        public ICollection<int>? ListaDeEmpresas { get; set; }
 
 
 
