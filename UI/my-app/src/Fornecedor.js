@@ -65,8 +65,8 @@ export class Fornecedor extends Component {
             Cnpj_Cpf: "",
             Nome: "",
             Email: "",
-            CEP: "",
-            Data_Nascimento: "",
+            Cep: "",
+            Data_nascimento: "",
             Estado: "",
             RG: ""
         });
@@ -75,11 +75,12 @@ export class Fornecedor extends Component {
     editClick(forn) {
         this.setState({
             modalTitle: "Editar Fornecedor",
+            Id: forn.Id,
             Cnpj_Cpf: forn.Cnpj_Cpf,
             Nome: forn.Nome,
             Email: forn.Email,
-            CEP: forn.CEP,
-            Data_Nascimento: forn.Data_Nascimento,
+            Cep: forn.Cep,
+            Data_nascimento: forn.Data_nascimento,
             Estado: forn.Estado,
             RG: forn.RG
         });
@@ -97,9 +98,11 @@ export class Fornecedor extends Component {
                 Cnpj_Cpf: this.state.Cnpj_Cpf,
                 Nome: this.state.Nome,
                 Email: this.state.Email,
-                CEP: this.state.CEP,
-                Data_Nascimento: this.state.Data_Nascimento,
+                CEP: this.state.Cep,
+                Data_nascimento: this.state.Data_nascimento,
                 Estado: this.state.Estado,
+                RG: this.state.RG
+
             })
         })
             .then(res => res.json())
@@ -126,9 +129,10 @@ export class Fornecedor extends Component {
                 Cnpj_Cpf: this.state.Cnpj_Cpf,
                 Nome: this.state.Nome,
                 Email: this.state.Email,
-                CEP: this.state.CEP,
-                Data_Nascimento: this.state.Data_Nascimento,
+                Cep: this.state.Cep,
+                Data_nascimento: this.state.Data_nascimento,
                 Estado: this.state.Estado,
+                RG: this.state.RG
             })
         })
             .then(res => res.json())
@@ -244,14 +248,13 @@ export class Fornecedor extends Component {
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Data de Nascimento</span>
-                                    <input type="text" className="form-control" value={Data_nascimento} onChange={this.changeDataNascimento} />
+                                    <input type="date" className="form-control" value={Data_nascimento} onChange={this.changeDataNascimento} />
                                 </div>
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">RG</span>
                                     <input type="text" className="form-control" value={RG} onChange={this.changeRG} />
                                 </div>
-
 
                                 {Id === 0 ? (
                                     <button type="button" className="btn btn-primary float-start" onClick={() => this.createClick()}>Criar</button>
@@ -264,8 +267,6 @@ export class Fornecedor extends Component {
                     </div>
                 </div>
             </div>
-
-
         );
     }
 }
