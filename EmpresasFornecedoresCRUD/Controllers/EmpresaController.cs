@@ -8,9 +8,11 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using EmpresasFornecedoresCRUD.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace EmpresasFornecedoresCRUD.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class EmpresaController : ControllerBase
@@ -57,6 +59,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
         }
 
 
+ 
         [HttpPost]
         public IActionResult Post(Empresa emp)
         {
@@ -82,6 +85,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
             return Ok("Insert executado com êxito!");
         }
 
+        
         [HttpPut]
         public IActionResult Put(Empresa emp)
         {
@@ -106,6 +110,7 @@ namespace EmpresasFornecedoresCRUD.Controllers
             return Ok("Update executado com êxito!");
         }
 
+        
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
