@@ -16,6 +16,7 @@ export class Empresa extends Component {
             Nome_Fantasia: "",
             Cep: "",
             Estado: "",
+            fornecedores: [],
 
         }
 
@@ -80,6 +81,17 @@ export class Empresa extends Component {
     }
 
 
+    getFornecedores = (id_empresa) => {
+        fetch(variaveis.API_URL + `Empresa/${id_empresa}/fornecedores`)
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ fornecedores: data });
+            })
+            .catch(error => {
+                console.log('Falha ao obter os fornecedores', error);
+            });
+    }
+
     addClick() {
         this.setState({
             modalTitle: "Adicionar Empresa",
@@ -102,6 +114,10 @@ export class Empresa extends Component {
         });
     }
 
+    seeClick(emp) {
+        this.setState({ modalTitle: "Visualizar Fornecedores" });
+        this.getFornecedores(emp.Id);
+    }
 
     createClick() {
         fetch(variaveis.API_URL + 'Empresa', {
@@ -180,7 +196,17 @@ export class Empresa extends Component {
     }
 
     render() {
-        const { empresas, modalTitle, Id, CNPJ, Nome_Fantasia, Cep, Estado } = this.state;
+        const {
+            empresas,
+            fornecedores,
+            modalTitle,
+            Id,
+            CNPJ,
+            Nome_Fantasia,
+            Cep,
+            Estado
+        } = this.state;
+
         return (
             <div>
                 <button type="button" className="btn btn-primary m-2 float-end" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => this.addClick()}>Adicionar Empresa</button>
@@ -204,6 +230,14 @@ export class Empresa extends Component {
                                 <td>{emp.Cep}</td>
                                 <td>{emp.Estado}</td>
                                 <td>
+                                    <button type="button" className="btn btn-light mr-1" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => this.seeClick(emp)}>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg>
+                                    </button>
+
                                     <button type="button" className="btn btn-light mr-1" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => this.editClick(emp)}>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -231,46 +265,78 @@ export class Empresa extends Component {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <div className="modal-body">
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">CNPJ</span>
-                                    <input type="text" className="form-control" value={CNPJ} onChange={this.changeCNPJ} />
+
+                            {modalTitle === "Visualizar Fornecedores" && (
+                                <div className="modal-body">
+                                    <table className="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>CNPJ/CPF</th>
+                                                <th>Nome</th>
+                                                <th>Email</th>
+                                                <th>CEP</th>
+                                                <th>Data de Nascimento</th>
+                                                <th>RG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {fornecedores.map(fornecedor => (
+                                                <tr key={fornecedor.Id}>
+                                                    <td>{fornecedor.Id}</td>
+                                                    <td>{fornecedor.Cnpj_Cpf}</td>
+                                                    <td>{fornecedor.Nome}</td>
+                                                    <td>{fornecedor.Email}</td>
+                                                    <td>{fornecedor.Cep}</td>
+                                                    <td>{fornecedor.Data_nascimento}</td>
+                                                    <td>{fornecedor.RG}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
+                            )}
 
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">Nome Fantasia</span>
-                                    <input type="text" className="form-control" value={Nome_Fantasia} onChange={this.changeNome_Fantasia} />
+                            {(modalTitle === "Adicionar Empresa" || modalTitle === "Editar Empresa") && (
+                                <div className="modal-body">
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">CNPJ</span>
+                                        <input type="text" className="form-control" value={CNPJ} onChange={this.changeCNPJ} />
+                                    </div>
+
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">Nome Fantasia</span>
+                                        <input type="text" className="form-control" value={Nome_Fantasia} onChange={this.changeNome_Fantasia} />
+                                    </div>
+
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">CEP</span>
+                                        <input type="text" className="form-control" value={Cep} onChange={this.changeCEP} />
+                                    </div>
+
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">Estado</span>
+                                        <select className="form-control" value={Estado} onChange={this.changeEstado}>
+                                            <option value="">Selecione</option>
+                                            {this.estados.map((estado, index) => (
+                                                <option key={index} value={estado}>{estado}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {Id === 0 && modalTitle === "Adicionar Empresa" ? (
+                                        <button type="button" className="btn btn-primary float-start" onClick={() => this.createClick()}>Criar</button>
+                                    ) : null}
+                                    {Id !== 0 && modalTitle === "Editar Empresa" ? (
+                                        <button type="button" className="btn btn-primary float-start" onClick={() => this.updateClick()}>Atualizar</button>
+                                    ) : null}
                                 </div>
+                            )}
 
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">CEP</span>
-                                    <input type="text" className="form-control" value={Cep} onChange={this.changeCEP} />
-                                </div>
-
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">Estado</span>
-                                    <select className="form-control" value={Estado} onChange={this.changeEstado}>
-                                        <option value="">Selecione</option>
-                                        {this.estados.map((estado, index) => (
-                                            <option key={index} value={estado}>{estado}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-
-                                {Id === 0 ? (
-                                    <button type="button" className="btn btn-primary float-start" onClick={() => this.createClick()}>Criar</button>
-                                ) : null}
-                                {Id !== 0 ? (
-                                    <button type="button" className="btn btn-primary float-start" onClick={() => this.updateClick()}>Atualizar</button>
-                                ) : null}
-                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-
+            </div >
         );
     }
 }

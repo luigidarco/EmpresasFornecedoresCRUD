@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EmpresasFornecedoresCRUD.Models
 {
@@ -12,5 +13,11 @@ namespace EmpresasFornecedoresCRUD.Models
         public string Cep { get; set; }
 
         public string Estado { get; set; }
+
+        [JsonIgnore]
+        public ICollection<int>? ListaDeFornecedores { get; set; }
+
+
+
     }
 }

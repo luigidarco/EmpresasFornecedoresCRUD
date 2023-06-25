@@ -98,7 +98,7 @@ export class Fornecedor extends Component {
                 Cnpj_Cpf: this.state.Cnpj_Cpf,
                 Nome: this.state.Nome,
                 Email: this.state.Email,
-                CEP: this.state.Cep,
+                Cep: this.state.Cep,
                 Data_nascimento: this.state.Data_nascimento,
                 Estado: this.state.Estado,
                 RG: this.state.RG

@@ -1,4 +1,6 @@
-﻿namespace EmpresasFornecedoresCRUD.Models
+﻿using System.Text.Json.Serialization;
+
+namespace EmpresasFornecedoresCRUD.Models
 {
     public class Fornecedor
     {
@@ -10,5 +12,11 @@
         public string Cep { get; set; }
         public string Data_nascimento { get; set; }
         public string RG { get; set; }
+        
+        [JsonIgnore]
+        public ICollection<int> ListaDeFornecedores { get; set; }
+
+
+
     }
 }
