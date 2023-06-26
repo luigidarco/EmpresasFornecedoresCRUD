@@ -1,6 +1,8 @@
 import { tsConstructorType } from "@babel/types";
 import { react, Component } from 'react';
 import { variaveis } from './Variaveis.js';
+import React from 'react';
+import InputMask from 'react-input-mask';
 
 export class Fornecedor extends Component {
 
@@ -37,8 +39,25 @@ export class Fornecedor extends Component {
     }
 
     changeCNPJ_CPF = (e) => {
-        this.setState({ Cnpj_Cpf: e.target.value });
+        const value = e.target.value;
+        let maskedValue = value;
+
+        // Remove all non-digit characters
+        const cleanedValue = value.replace(/\D/g, '');
+
+        // Check the length of the cleaned value to determine the document type
+        if (cleanedValue.length === 11) {
+            // CPF
+            maskedValue = cleanedValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (cleanedValue.length === 14) {
+            // CNPJ
+            maskedValue = cleanedValue.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        // Atualiza o estado com o valor mascarado
+        this.setState({ Cnpj_Cpf: maskedValue });
     }
+
 
     changeNome = (e) => {
         this.setState({ Nome: e.target.value });
@@ -206,7 +225,7 @@ export class Fornecedor extends Component {
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>CNPJ_CPF</th>
+                            <th>CNPJ/CPF</th>
                             <th>Nome</th>
                             <th>E-Mail</th>
                             <th>Cep</th>
@@ -309,7 +328,12 @@ export class Fornecedor extends Component {
 
                                     <div className="input-group mb-3">
                                         <span className="input-group-text">CEP</span>
-                                        <input type="text" className="form-control" value={Cep} onChange={this.changeCEP} />
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99999-999"
+                                            value={Cep}
+                                            onChange={this.changeCEP}
+                                        />
                                     </div>
 
                                     <div className="input-group mb-3">

@@ -1,6 +1,8 @@
 import { tsConstructorType } from "@babel/types";
 import { react, Component } from 'react';
 import { variaveis } from './Variaveis.js';
+import React from 'react';
+import InputMask from 'react-input-mask';
 
 export class Empresa extends Component {
 
@@ -301,7 +303,12 @@ export class Empresa extends Component {
                                 <div className="modal-body">
                                     <div className="input-group mb-3">
                                         <span className="input-group-text">CNPJ</span>
-                                        <input type="text" className="form-control" value={CNPJ} onChange={this.changeCNPJ} />
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99.999.999/9999-99"
+                                            value={CNPJ}
+                                            onChange={this.changeCNPJ}
+                                        />
                                     </div>
 
                                     <div className="input-group mb-3">
@@ -311,7 +318,12 @@ export class Empresa extends Component {
 
                                     <div className="input-group mb-3">
                                         <span className="input-group-text">CEP</span>
-                                        <input type="text" className="form-control" value={Cep} onChange={this.changeCEP} />
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99999-999"
+                                            value={Cep}
+                                            onChange={this.changeCEP}
+                                        />
                                     </div>
 
                                     <div className="input-group mb-3">
