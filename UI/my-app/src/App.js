@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <div className="App container">
         <h3 className="d-flex justify-content-center m-3">
-          React FrontEnd
+          EmpresaFornecedoresCRUD
         </h3>
 
         <nav className="navbar navbar-expand-sm bg-light navbar-light">
